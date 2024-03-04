@@ -1,0 +1,150 @@
+{
+  "name": "Johnny Darko",
+  "colors": {
+    "editor.background": "#040404",
+    "editor.foreground": "#dddddd",
+    "editor.selectionHighlightBackground": "#ee660080",
+    "editor.selectionHighlightBorder": "#ee6600",
+    "editorLineNumber.foreground": "#999999",
+    "editorIndentGuide.background1": "#333333",
+    "editorIndentGuide.background2": "#333333",
+    "editorIndentGuide.background3": "#333333",
+    "editorIndentGuide.background4": "#333333",
+    "editorIndentGuide.activeBackground1": "#666666",
+    "editorIndentGuide.activeBackground2": "#666666",
+    "editorIndentGuide.activeBackground3": "#666666",
+    "editorIndentGuide.activeBackground4": "#666666",
+    "editorWhitespace.foreground": "#222222",
+    "editor.lineHighlightBackground": "#ee660020",
+    "editor.lineHighlightBorder": "#ee660000",
+    "editorBracketMatch.background": "#ee6600",
+    "editorBracketMatch.border": "#ee660000",
+
+    // These override the Dark High Contrast chrome
+    "activityBar.foreground": "#ee6600",
+    "activityBar.inactiveForeground": "#666666",
+    "activityBar.background": "#040404",
+
+    "sideBar.background": "#040404",
+    "sideBar.foreground": "#666666",
+
+    "list.activeSelectionForeground": "#cccccc",
+    
+    "minimap.background": "#04040480"
+  },
+  "semanticTokenColors": {
+    "macro": "#aa4433",
+    "type": "#11bbbb",
+    "templateType": "#11bbbb",
+    "parameter": "#aaddaa", // tint like constant
+    // cannot color these appropriately because C++ extension does not provide sematic token modifier for enum
+		//  "enumMember": "#00aa00", // constant
+		// "*.declaration": "#dddddd", // constant
+  },
+  "tokenColors": [
+		// Parameter
+		{
+			"scope":"variable.parameter.preprocessor",
+			"settings": {
+				"foreground": "#aaddaa",
+			}
+		},
+    // Type
+    {
+      "scope": [
+        "storage.type.primitive",
+        "storage.modifier",
+        "support.type.built-in"
+      ],
+      "settings": {
+        "foreground": "#119999"
+      }
+    },
+    // Preprocessor
+    {
+      "scope": [ "meta.preprocessor"], // applies to all preprocessor content
+      "settings": {
+        "foreground": "#aaaaaa"
+      }
+    },
+    {
+      "scope": [ "keyword.control.directive"],
+      "settings": {
+        "foreground": "#aa7733"
+      }
+    },
+    // Comment
+    {
+      "scope": ["comment", "punctuation.definition.comment"],
+      "settings": {
+        "foreground": "#664433"
+      }
+    },
+    // Punctuation
+    {
+      "scope": [
+        "punctuation",
+        "variable.language.this",
+        "keyword.operator",
+        "keyword.control",
+        "keyword.other",
+        "storage.type.struct",
+        "storage.type.enum",
+        "storage.type.template",
+        "storage.type.union",
+				"entity.name.operator.type", // bool
+      ],
+      "settings": {
+        "foreground": "#888888"
+      }
+    },
+    // Number
+    {
+      "scope": ["constant.numeric", "constant.language"],
+      "settings": { "foreground": "#00aa00" }
+    },
+    {
+      "scope": "keyword.other.unit.hexadecimal",
+      "settings": { "foreground": "#006600" }
+    },
+		// String
+		{
+      "scope": "string.quoted",
+      "settings": { 
+				"foreground": "#ffbb00",
+			}
+    },
+		{
+      "scope": "string.quoted constant.character.escape",
+      "settings": { 
+				"foreground": "#bb8800",
+			}
+    },
+		// Enum definition
+		{
+			"scope": "meta.enum.definition variable.other",
+      "settings": {
+				"foreground": "#dddddd",
+			}
+		},
+    // JavaScript shenanigans
+    {
+			"scope": "source.js storage.type",
+      "settings": {
+				"foreground": "#888888",
+			}
+		},
+    {
+			"scope": "source.js string.template",
+      "settings": {
+				"foreground": "#ffbb00",
+			}
+		},
+    {
+			"scope": "source.js string.template variable.other",
+      "settings": {
+				"foreground": "#dddddd",
+			}
+		}
+  ]
+}

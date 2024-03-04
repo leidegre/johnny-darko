@@ -1,0 +1,6 @@
+= TODO
+
+* Generate JSON from JavaScript
+** This will allow me to use color variables
+** Will lose color picker but can always edit the JSON files instead to find the color and then bring that into the script that builds everything.
+* Add support for asciidoc
