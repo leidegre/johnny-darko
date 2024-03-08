@@ -1,5 +1,6 @@
 {
   "name": "Johnny Darko",
+  "semanticHighlighting": true,
   "colors": {
     "editor.background": "#040404",
     "editor.foreground": "#dddddd",
@@ -145,6 +146,31 @@
       "settings": {
 				"foreground": "#dddddd",
 			}
-		}
+		},
+    // HLSL shenanigans
+    {
+			"scope": "source.hlsl storage.type",
+      "settings": {
+				"foreground": "#888888",
+			}
+		},
+    {
+			"scope": "source.hlsl storage.type.basic",
+      "settings": {
+				"foreground": "#119999",
+			}
+		},
+    {
+			"scope": "source.hlsl support.variable.semantic",
+      "settings": {
+				"foreground": "#aa4433",
+			}
+		},
+    {
+			"scope": "source.hlsl support.function",
+      "settings": {
+				"foreground": "#888888",
+			}
+		},
   ]
 }
