@@ -30,26 +30,47 @@
     "sideBar.foreground": "#666666",
 
     "list.activeSelectionForeground": "#cccccc",
-    
-    "minimap.background": "#04040480"
+
+    "minimap.background": "#04040480",
+
+    // inside the webview there are css variables like
+    //  var(--vscode-textPreformat-foreground);
+    //  var(--vscode-textPreformat-background);
+    "textPreformat.background": "#222222",
+    "textPreformat.foreground": "#cccccc"
   },
   "semanticTokenColors": {
+    // #1188bb is good color but for what? it's more blue than cyan
+
+    // C++
+    // "property": "#aaaaaa", // member variable
     "macro": "#aa4433",
+    "namespace": "#888888",
     "type": "#11bbbb",
     "templateType": "#11bbbb",
     "parameter": "#aaddaa", // tint like constant
     // cannot color these appropriately because C++ extension does not provide sematic token modifier for enum
-		//  "enumMember": "#00aa00", // constant
-		// "*.declaration": "#dddddd", // constant
+    // "enumMember": "#009900", // constant
+    // "enumMember.declaration": "#dddddd", // doesn't work yet...
+    // "*.declaration": "#dddddd", // constant
+    // C#
+    "typeParameter": "#aaddaa",
+    "enum": "#11bbbb",
+    "class": "#11bbbb",
+    "struct": "#11bbbb",
+    "interface": "#11bbbb",
+    "recordClass": "#11bbbb",
+    "recordStruct": "#11bbbb",
+    "function.defaultLibrary": "#119999" // slightly darker than type color for builtin types
   },
   "tokenColors": [
-		// Parameter
-		{
-			"scope":"variable.parameter.preprocessor",
-			"settings": {
-				"foreground": "#aaddaa",
-			}
-		},
+    // Parameter
+    {
+      "scope": "variable.parameter.preprocessor",
+      "settings": {
+        "foreground": "#aaddaa"
+      }
+    },
     // Type
     {
       "scope": [
@@ -63,13 +84,13 @@
     },
     // Preprocessor
     {
-      "scope": [ "meta.preprocessor"], // applies to all preprocessor content
+      "scope": ["meta.preprocessor"], // applies to all preprocessor content
       "settings": {
         "foreground": "#aaaaaa"
       }
     },
     {
-      "scope": [ "keyword.control.directive"],
+      "scope": ["keyword.control.directive"],
       "settings": {
         "foreground": "#aa7733"
       }
@@ -93,7 +114,10 @@
         "storage.type.enum",
         "storage.type.template",
         "storage.type.union",
-				"entity.name.operator.type", // bool
+        "entity.name.operator.type", // bool
+        "constant.language.undefined", // undefined
+        "constant.language.nullptr", // nullptr
+        "meta.brace.round" // () JavaScript
       ],
       "settings": {
         "foreground": "#888888"
@@ -108,69 +132,100 @@
       "scope": "keyword.other.unit.hexadecimal",
       "settings": { "foreground": "#006600" }
     },
-		// String
-		{
+    // String
+    {
       "scope": "string.quoted",
-      "settings": { 
-				"foreground": "#ffbb00",
-			}
-    },
-		{
-      "scope": "string.quoted constant.character.escape",
-      "settings": { 
-				"foreground": "#bb8800",
-			}
-    },
-		// Enum definition
-		{
-			"scope": "meta.enum.definition variable.other",
       "settings": {
-				"foreground": "#dddddd",
-			}
-		},
+        "foreground": "#ffbb00"
+      }
+    },
+    {
+      "scope": [
+        "string.quoted constant.character.escape",
+        "punctuation.definition.string.begin", // first "
+        "punctuation.definition.string.end" // last "
+      ],
+      "settings": {
+        "foreground": "#bb8800"
+      }
+    },
+    // Enum definition
+    {
+      "scope": "meta.enum.definition variable.other",
+      "settings": {
+        "foreground": "#dddddd"
+      }
+    },
     // JavaScript shenanigans
     {
-			"scope": "source.js storage.type",
+      "scope": [
+        "source.js storage.type",
+        "source.ts storage.type",
+        "source.tsx storage.type",
+        "source.js support.type",
+        "source.ts support.type",
+        "source.tsx support.type"
+      ],
       "settings": {
-				"foreground": "#888888",
-			}
-		},
+        "foreground": "#888888"
+      }
+    },
     {
-			"scope": "source.js string.template",
+      "scope": "string.template",
       "settings": {
-				"foreground": "#ffbb00",
-			}
-		},
+        "foreground": "#ffbb00"
+      }
+    },
     {
-			"scope": "source.js string.template variable.other",
+      "scope": "string.template variable.other",
       "settings": {
-				"foreground": "#dddddd",
-			}
-		},
+        "foreground": "#dddddd"
+      }
+    },
     // HLSL shenanigans
     {
-			"scope": "source.hlsl storage.type",
+      "scope": "source.hlsl storage.type",
       "settings": {
-				"foreground": "#888888",
-			}
-		},
+        "foreground": "#888888"
+      }
+    },
     {
-			"scope": "source.hlsl storage.type.basic",
+      "scope": "source.hlsl storage.type.basic",
       "settings": {
-				"foreground": "#119999",
-			}
-		},
+        "foreground": "#119999"
+      }
+    },
     {
-			"scope": "source.hlsl support.variable.semantic",
+      "scope": "source.hlsl support.variable.semantic",
       "settings": {
-				"foreground": "#aa4433",
-			}
-		},
+        "foreground": "#aa4433"
+      }
+    },
     {
-			"scope": "source.hlsl support.function",
+      "scope": "source.hlsl support.function",
       "settings": {
-				"foreground": "#888888",
-			}
-		},
+        "foreground": "#888888"
+      }
+    },
+    // asciidoc
+    {
+      "scope": ["markup.heading.marker", "markup.list.bullet"],
+      "settings": {
+        "foreground": "#888888"
+      }
+    },
+    // JSX
+    {
+      "scope": "entity.name.tag.tsx",
+      "settings": {
+        "foreground": "#aa4433"
+      }
+    },
+    {
+      "scope": "entity.other.attribute-name.tsx",
+      "settings": {
+        "foreground": "#662211"
+      }
+    }
   ]
 }
