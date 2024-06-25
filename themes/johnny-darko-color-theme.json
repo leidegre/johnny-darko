@@ -226,6 +226,13 @@
       "settings": {
         "foreground": "#662211"
       }
-    }
+    },
+    // Lua
+    {
+      "scope": "keyword.local.lua",
+      "settings": {
+        "foreground": "#888888"
+      }
+    },
   ]
 }
