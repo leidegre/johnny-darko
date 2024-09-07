@@ -105,19 +105,20 @@
     // Punctuation
     {
       "scope": [
-        "punctuation",
-        "variable.language.this",
-        "keyword.operator",
+        "constant.language.nullptr", // nullptr
+        "constant.language.undefined", // undefined
+        "entity.name.operator.type", // bool
         "keyword.control",
+        "keyword.operator",
         "keyword.other",
-        "storage.type.struct",
+        "meta.brace.round", // () JavaScript
+        "punctuation",
+        "storage.type.built-in.primitive", // C void
         "storage.type.enum",
+        "storage.type.struct",
         "storage.type.template",
         "storage.type.union",
-        "entity.name.operator.type", // bool
-        "constant.language.undefined", // undefined
-        "constant.language.nullptr", // nullptr
-        "meta.brace.round" // () JavaScript
+        "variable.language.this",
       ],
       "settings": {
         "foreground": "#888888"
