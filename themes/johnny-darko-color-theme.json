@@ -61,6 +61,7 @@
     "interface": "#11bbbb",
     "recordClass": "#11bbbb",
     "recordStruct": "#11bbbb",
+    "delegate": "#11bbbb",
     "function.defaultLibrary": "#119999" // slightly darker than type color for builtin types
   },
   "tokenColors": [
@@ -71,7 +72,7 @@
         "foreground": "#aaddaa"
       }
     },
-    // Type
+    // Type (builtin and custom)
     {
       "scope": [
         "storage.type.primitive",
@@ -82,11 +83,25 @@
         "foreground": "#119999"
       }
     },
+    {
+      "scope": [
+        "entity.name.type",
+      ],
+      "settings": {
+        "foreground": "#11bbbb"
+      }
+    },
     // Preprocessor
     {
       "scope": ["meta.preprocessor"], // applies to all preprocessor content
       "settings": {
         "foreground": "#aaaaaa"
+      }
+    },
+    {
+      "scope": ["entity.name.function.preprocessor"],
+      "settings": {
+        "foreground": "#aa4433"
       }
     },
     {
@@ -119,6 +134,12 @@
         "storage.type.template",
         "storage.type.union",
         "variable.language.this",
+        
+        // Go
+        "keyword.package",
+        "keyword.struct",
+        "keyword.type",
+        "keyword.function",
       ],
       "settings": {
         "foreground": "#888888"

@@ -15,6 +15,11 @@
         "label": "Johnny Darko",
         "uiTheme": "hc-black",
         "path": "./themes/johnny-darko-color-theme.json"
+      },
+      {
+        "label": "Johnny Bright",
+        "uiTheme": "hc-light",
+        "path": "./themes/johnny-bright-color-theme.json"
       }
     ]
   }

@@ -1,0 +1,516 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      :root {
+        --background: #f9f4e7;
+        --ident: #242829;
+        --constant: #c5280d;
+        --typename: #0464be;
+        --digit: #169258;
+        --comment: #8c8c8c;
+        --other: #a99f84;
+        --keyword: #be9913;
+        --builtin: #3c99c8;
+        --string: #3c99c8;
+      }
+      
+      html, body {
+        background-color: var(--background);
+        margin: 0
+      }
+      
+      #editor {
+        font-family: 'Pragmata Pro', monospace;
+        font-size: 10pt;
+      }
+    </style>
+    <script>
+      class Scanner {
+        text = ""
+        i = 0
+        j = 0
+        pos = 0
+        tok = ""
+        lit = ""
+        
+        init(/** @type {string} */ text) {
+          this.text = text
+          this.i = 0
+          this.j = 0
+          this.tok = ""
+          this.lit = ""
+        }
+        
+        peek() {
+          return this.i < this.text.length ? this.text.charCodeAt(this.i) : 0
+        }
+        
+        read() {
+          const next = this.i + 1
+          if (next <= this.text.length) {
+            this.i = next
+          }
+        }
+        
+        accept(/** @type {number} */ c) {
+          if (this.peek() == c) {
+            this.read()
+            return true
+          }
+          return false
+        }
+        
+        acceptSpace() {
+          const c = this.peek()
+          if (c == 0x09 || c == 0x20) {
+            this.read()
+            return true
+          }
+          return false
+        }
+        
+        acceptNewLine() {
+          let ok = false
+          const c = this.peek()
+          if (c == 10) {
+            this.read()
+            ok = true
+          }
+          if (c == 13) {
+            this.read()
+            if (this.peek() == 10) {
+              this.read()
+            }
+            ok = true
+          }
+          return ok
+        }
+        
+        acceptLetter() {
+          const c = this.peek()
+          if ((0x41 <= c && c <= 0x5a) ||
+            (0x61 <= c && c <= 0x7a)) {
+              this.read()
+              return true
+            }
+            return false
+        }
+        
+        acceptDigit() {
+          const c = this.peek()
+          if (0x30 <= c && c <= 0x39) {
+            this.read()
+            return true
+          }
+          return false
+        }
+        
+        acceptLetterOrDigit() {
+          const c = this.peek()
+          if ((0x41 <= c && c <= 0x5a) ||
+            (0x61 <= c && c <= 0x7a) ||
+            (0x30 <= c && c <= 0x39)) {
+              this.read()
+              return true;
+            }
+            return false;
+        }
+        
+        yield(/** @type {string} */ tok) {
+          // if (!(this.j < this.i)) throw new RangeError()
+          
+          this.pos = this.i
+          this.tok = tok
+          this.lit = this.text.slice(this.j, this.i)
+          
+          this.j = this.i
+        }
+        
+        scan() {
+          if (this.acceptSpace()) {
+            while (this.acceptSpace()) {
+              // nom nom nom
+            }
+            this.yield("space")
+            return
+          }
+          
+          if (this.acceptNewLine()) {
+            this.yield("eol")
+            return
+          }
+          
+          if (this.acceptDigit()) {
+            while (this.acceptDigit()) {
+              // nom nom nom
+            }
+            this.yield("digit")
+            return
+          }
+          
+          if (this.acceptLetter() || this.accept(0x5F)) {
+            while (this.acceptLetterOrDigit() || this.accept(0x5F) || this.accept(0xb7)) {
+              // nom nom nom
+            }
+            this.yield("ident")
+            return
+          }
+          
+          if (this.accept(0x22)) {
+            while (!(this.peek() == 0x22 || this.peek() == 0)) {
+                this.read()
+            }
+            this.accept(0x22)
+            this.yield("string")
+            return
+          }
+          
+          if (this.accept(0x2f)) {
+            if (this.accept(0x2f)) {
+              while (!(this.peek() == 10 || this.peek() == 13 || this.peek() == 0)) {
+                this.read()
+              }
+              this.yield("comment") // comment
+              return
+            }
+            this.yield("other") // punctuation
+            return
+          }
+          
+          if (!(this.peek() == 0)) {
+            this.read()
+            while ((0x21 <= this.peek() && this.peek() <= 0x2f) && !(this.peek() == 0x22)) {
+              this.read()
+            }
+            this.yield("other") // punctuation
+            return
+          }
+          
+          this.yield("eof")
+          return
+        }
+      }
+      
+      document.addEventListener("DOMContentLoaded", () => {
+        const onInput = (/** @type (Event) */ e) => {
+          const inp = /** @type (HTMLInputElement) */ (e.currentTarget)
+          
+          document.documentElement.style.setProperty(inp.id, inp.value);
+        }
+        
+        const palette = document.getElementById("palette")
+        const rootStyle = getComputedStyle(document.documentElement)
+        const styles = []
+        
+        for (const style of rootStyle) {
+          if (style.startsWith("--")) {
+            styles.push(style)
+          }
+        }
+        
+        styles.sort((a,b)=>a.localeCompare(b))
+        
+        const sheet = document.createElement("style")
+        
+        for(const style of styles) {
+          const label = document.createElement("label")
+          const input = document.createElement("input")
+          
+          input.id = style
+          input.type  = "color"
+          input.value = rootStyle.getPropertyValue(style)
+          input.addEventListener("input", onInput)
+          
+          label.append(input)
+          label.append("\t" + style)
+          
+          palette.append(label)
+          
+          sheet.append(`.${style.slice(2)} { color: var(${style}) }\n`)
+        }
+        
+        document.head.appendChild(sheet);
+        
+        const editor = document.getElementById("editor")
+        
+        const scanner = new Scanner() 
+        
+        scanner.init(editor.textContent)
+        scanner.scan()
+        
+        editor.textContent = ""
+        
+        const keywords = new Set(["if", "else", "for", "static", "const", "void"])
+        const builtins = new Set(["int_ptr·u", "int·u", "raw_ptr"])
+        
+        while (scanner.tok != "eof") {
+          if (scanner.tok == "space") {
+            editor.append(scanner.lit)
+          } else if (scanner.tok == "eol") {
+            editor.append(scanner.lit)
+          } else {
+            const span = document.createElement("span")
+            if (scanner.tok == "ident") {
+              
+              if (scanner.lit.match(/^[A-Z][A-Z_0-9]*$/)) {
+                span.className = "constant"
+              } else if (scanner.lit.match(/^[A-Z]+[0-9a-z]*(_[A-Z]+[0-9a-z]*)*$/)) {
+                span.className = "typename"
+              } else {
+                span.className = keywords.has(scanner.lit) ? "keyword"  :
+                  builtins.has(scanner.lit) ? "builtin" :
+                    "ident"
+              }
+            } else {
+              span.className = scanner.tok
+            }
+            span.textContent = scanner.lit
+            editor.append(span)
+          }
+          scanner.scan()
+        }
+      });
+    </script>
+  </head>
+  <body>
+    
+    <div style="display: flex; flex-direction: row-reverse; justify-content: center; gap: 10px">
+      
+    <div id="palette" style="display: flex;  flex-direction: column"></div>
+    
+    <div style="overflow: scroll; max-width: 80ch; max-height: 100vh; white-space: pre;" id="editor" class="foreground">#include "cx_compiler.h"
+
+D_ENUM(Root_Command_Type) {
+  Root_Command_None,
+  Root_Command_Build,
+  Root_Command_Scan,
+  Root_Command_Parse,
+  Root_Command_Check,
+};
+
+D_STRUCT(Root_Command) {
+  struct {
+    string entry;
+  } build;
+
+  struct {
+    string file;
+  } scan;
+
+  struct {
+    string file;
+  } parse;
+
+  struct {
+    CLI_String_Array files;
+  } check;
+
+  Root_Command_Type command;
+};
+
+CLI_Command *create_root(Build *build, Root_Command *root) {
+  Arena *arena = build->scratch;
+
+  CLI_Command *cx = cli_command(arena, 0, STRING("cx"), 0, 0);
+
+  // command "cx build"
+  CLI_Command *cx_build = cli_command(arena, cx, STRING("build"), Root_Command_Build, &root->command);
+
+  // has these flags
+  cli_flag(cx_build, cli_bind_bool(arena, STRING("-no-trim"), &build->options.no_trim));
+  cli_flag(cx_build, cli_bind_bool(arena, STRING("-no-emit"), &build->options.no_emit));
+  cli_flag(cx_build, cli_bind_bool(arena, STRING("-no-tool"), &build->options.no_tool));
+
+  cli_flag(cx_build, cli_bind_bool(arena, STRING("-debug-parse"), &build->options.debug_parse));
+  cli_flag(cx_build, cli_bind_bool(arena, STRING("-debug-resolve"), &build->options.debug_resolve));
+  cli_flag(cx_build, cli_bind_bool(arena, STRING("-debug-check"), &build->options.debug_check));
+
+  // and this positional
+  cli_positional(cx_build, cli_bind_string(arena, STRING("entry"), &root->build.entry));
+
+  CLI_Command *cx_scan = cli_command(arena, cx, STRING("scan"), Root_Command_Scan, &root->command);
+
+  cli_positional(cx_scan, cli_bind_string(arena, STRING("file"), &root->scan.file));
+
+  CLI_Command *cx_parse = cli_command(arena, cx, STRING("parse"), Root_Command_Parse, &root->command);
+
+  cli_positional(cx_parse, cli_bind_string(arena, STRING("file"), &root->parse.file));
+
+  CLI_Command *cx_check = cli_command(arena, cx, STRING("check"), Root_Command_Check, &root->command);
+
+  cli_positional_va(cx_check, cli_bind_string_slice(arena, STRING("files"), &root->check.files));
+
+  return cx;
+};
+
+int main(void) {
+  g_stdin = GetStdHandle((int·u)-10); // STD_INPUT_HANDLE
+  g_stdout = GetStdHandle((int·u)-11); // STD_OUTPUT_HANDLE
+  SetConsoleOutputCP(GetACP());
+  int·u console_mode;
+  GetConsoleMode(g_stdout, &console_mode);
+  g_vt_enabled = (console_mode & 0x0004) == 0x0004;
+  //
+
+  Build* build = build_create();
+
+  Root_Command cli = {0};
+  CLI_Command *cli_parser = create_root(build, &cli);
+
+  char·u *argv = (char·u *)GetCommandLineA();
+
+  cli_parse(build->scratch, cli_parser, argv);
+
+  int·u exit_code = 0;
+
+  switch (cli.command) {
+    case Root_Command_Build: {
+      if (!cli.build.entry.length) {
+        print_string_ln(STRING("command 'build' requires positional argument <entry>"));
+        return 1;
+      }
+
+      Package *pkg = build_import(build, cli.build.entry);
+      if (!pkg) {
+        print_string_ln(STRING("cannot find package"));
+        return 1;
+      }
+
+      if (!build_run(build, pkg)) {
+        return 1;
+      }
+      break;
+    }
+
+    case Root_Command_Scan: {
+      bytes source;
+
+      if (!os_read_file(build->arena, cli.scan.file, 1, &source)) {
+        FMT_PRINT(build->scratch, "cannot read file: %\n",
+          FMT_STR(cli.parse.file),
+        );
+        return 1;
+      }
+
+      File file = {.filename = cli.parse.file, .end = (int·u)source.length, .bytes = source};
+
+      Parser *parser = ARENA_PUSH(build->scratch, Parser);
+      parser_init(parser, build->arena, build->scratch);
+      scanner_init(&parser->scanner, &file);
+
+      do {
+        parser_read(parser);
+        if ((parser->scanner.tok != Token_Line_Ending) & (parser->scanner.tok != Token_Semi) & (parser->scanner.tok != Token_Comma)) {
+          FMT_PRINT(build->scratch, "% % %\n",
+            FMT_INT(parser->scanner.pos),
+            FMT_STR(token_string(parser->scanner.tok)),
+            FMT_STR(parser->scanner.lit)
+          );
+        } else {
+          FMT_PRINT(build->scratch, "% %\n",
+            FMT_INT(parser->scanner.pos),
+            FMT_STR(token_string(parser->scanner.tok))
+          );
+        }
+      } while (parser->scanner.tok != Token_EOF);
+      break;
+    }
+
+    case Root_Command_Parse: {
+      bytes source;
+
+      if (!os_read_file(build->arena, cli.parse.file, 1, &source)) {
+        print_string_ln(STRING("cannot read file"));
+        return 1;
+      }
+
+      Parser parser;
+      parser_init(&parser, build->arena, build->scratch);
+
+      int_ptr·u arena_pos0 = arena_pos(parser.arena);
+      int_ptr·u scratch_pos0 = arena_pos(parser.scratch);
+
+      File file = {.filename = cli.parse.file, .end = (int·u)source.length, .bytes = source};
+      Syntax *node = parser_parse_file(&parser, &file);
+
+      for (Error *err = parser.first_error; err; err = err->next_error) {
+        FMT_PRINT(build->scratch,
+          "%(%,%): %\n",
+          FMT_STR(err->loc.file->filename),
+          FMT_INT(err->loc.ln),
+          FMT_INT(err->loc.col),
+          FMT_STR(err->message)
+        );
+      }
+
+      int_ptr·u arena_pos1 = arena_pos(parser.arena);
+      int_ptr·u scratch_pos1 = arena_pos(parser.scratch);
+
+      int_ptr·u arena_diff = arena_pos1 - arena_pos0;
+      int_ptr·u scratch_diff = scratch_pos1 - scratch_pos0;
+
+      String_Builder *sb = string_builder_create(build->arena);
+      syntax_print(sb, node, 0); // syntax_print
+
+      print_string_ln(string_builder_string(sb));
+
+      FMT_PRINT(build->scratch, "source % bytes\n", FMT_INT(file.bytes.length));
+      FMT_PRINT(build->scratch, "tree % bytes\n", FMT_INT(arena_diff));
+      FMT_PRINT(build->scratch, "scratch % bytes\n", FMT_INT(scratch_diff));
+      break;
+    }
+
+    case Root_Command_Check: {
+      // This way you can check a subset of files, as long as they "belong" to same package
+      if(!cli.check.files.length) {
+        print_string_ln(STRING("command 'check' requires at least one positional argument <file>"));
+        return 1;
+      }
+
+      // "Transient" package
+      Package *pkg = ARENA_PUSH(build->arena, Package); // TODO package_create
+
+      File *prev_file = 0;
+      for (int·u i = 0; i < cli.check.files.length; i += 1) {
+        File* file = ARENA_PUSH(build->arena, File);
+        string filename = cli.check.files.data[i];
+        bytes bytes;
+        if (!os_read_file(build->arena, filename, 1, &bytes)) {
+          FMT_PRINT(build->scratch, "cannot read file %\n", FMT_STR(filename));
+          return 1;
+        }
+        Pos pos = build_alloc_pos(build, safe_int(bytes.length+1));
+        file->pos = pos;
+        file->end = pos + safe_int(bytes.length);
+        file->filename = filename;
+        file->bytes = bytes;
+        file->flags |= File_Flag_Has_Source;
+        // package_add_file(pkg, file)
+        if (prev_file) {
+          prev_file->next = file;
+        } else {
+          pkg->first_file = file;
+        }
+        prev_file = file;
+      }
+
+      build->options.no_trim = 1;
+      build->options.no_emit = 1;
+
+      build_enqueue(build, pkg);
+
+      if (!build_run(build, pkg)) {
+        return 1;
+      }
+    }
+  }
+
+  return 0;
+}</div>
+    
+    </div>
+    
+  </body>
+</html>
