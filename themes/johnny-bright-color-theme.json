@@ -94,11 +94,7 @@
         "storage.type.struct",
         "storage.type.template",
         "storage.type.union",
-        "variable.language.this",
-        "keyword.package",
-        "keyword.struct",
-        "keyword.type",
-        "keyword.function"
+        "variable.language.this"
       ],
       "settings": {
         "foreground": "#a99f84"
@@ -139,6 +135,48 @@
       "scope": "meta.enum.definition variable.other",
       "settings": {
         "foreground": "#242829"
+      }
+    },
+    {
+      "scope": [
+        "keyword.channel.go",
+        "keyword.const.go",
+        "keyword.control.go",
+        "keyword.function.go",
+        "keyword.interface.go",
+        "keyword.map.go",
+        "keyword.package.go",
+        "keyword.struct.go",
+        "keyword.type.go",
+        "keyword.var.go"
+      ],
+      "settings": {
+        "foreground": "#a99f84"
+      }
+    },
+    {
+      "scope": [
+        "entity.name.type.comparable.go",
+        "storage.type.boolean.go",
+        "storage.type.byte",
+        "storage.type.error.go",
+        "storage.type.numeric.go",
+        "storage.type.rune.go",
+        "storage.type.string.go",
+        "storage.type.uintptr.go"
+      ],
+      "settings": {
+        "foreground": "#3c99c8"
+      }
+    },
+    {
+      "scope": [
+        "constant.language.boolean.go",
+        "constant.language.iota.go",
+        "constant.numeric.decimal.go"
+      ],
+      "settings": {
+        "foreground": "#912e1d"
       }
     }
   ]

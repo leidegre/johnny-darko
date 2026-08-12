@@ -1,48 +1,38 @@
 import { writeFileSync } from "node:fs";
 
-const colors = {
-  background: "#f9f4e7",
-  foreground: "#242829",
-  constant: "#912e1d",
-  typename: "#11518d",
-  digit: "#169258", // literal
-  parameter: "#285c41", // tint like literal
-  comment: "#8c8c8c",
-  other: "#a99f84",
-  keyword: "#be9913",
-  builtin: "#3c99c8",
-  string: "#a5731d",
-};
+import { palette } from "./palette.mjs";
+
+import * as go from "./lang/go.mjs";
 
 const theme = {
   name: "Johnny Bright",
   semanticHighlighting: true,
   colors: {
-    "editor.background": colors.background,
-    "editor.foreground": colors.foreground,
+    "editor.background": palette.background,
+    "editor.foreground": palette.foreground,
   },
   semanticTokenColors: {
-    macro: colors.constant,
-    namespace: colors.other,
-    type: colors.typename,
-    templateType: colors.typename,
-    parameter: colors.parameter,
-    typeParameter: colors.parameter,
-    enum: colors.typename,
-    class: colors.typename,
-    struct: colors.typename,
-    interface: colors.typename,
-    recordClass: colors.typename,
-    recordStruct: colors.typename,
-    delegate: colors.typename,
-    "function.defaultLibrary": colors.builtin,
+    macro: palette.constant,
+    namespace: palette.other,
+    type: palette.typename,
+    templateType: palette.typename,
+    parameter: palette.parameter,
+    typeParameter: palette.parameter,
+    enum: palette.typename,
+    class: palette.typename,
+    struct: palette.typename,
+    interface: palette.typename,
+    recordClass: palette.typename,
+    recordStruct: palette.typename,
+    delegate: palette.typename,
+    "function.defaultLibrary": palette.builtin,
   },
   tokenColors: [
     // Parameter
     {
       scope: "variable.parameter.preprocessor",
       settings: {
-        foreground: colors.parameter,
+        foreground: palette.parameter,
       },
     },
     // Type (builtin and custom)
@@ -53,13 +43,13 @@ const theme = {
         "support.type.built-in",
       ],
       settings: {
-        foreground: colors.builtin,
+        foreground: palette.builtin,
       },
     },
     {
       scope: ["entity.name.type"],
       settings: {
-        foreground: colors.typename,
+        foreground: palette.typename,
       },
     },
     // Preprocessor
@@ -85,7 +75,7 @@ const theme = {
     {
       scope: ["comment", "punctuation.definition.comment"],
       settings: {
-        foreground: colors.comment,
+        foreground: palette.comment,
       },
     },
     // Punctuation
@@ -105,21 +95,15 @@ const theme = {
         "storage.type.template",
         "storage.type.union",
         "variable.language.this",
-
-        // Go
-        "keyword.package",
-        "keyword.struct",
-        "keyword.type",
-        "keyword.function",
       ],
       settings: {
-        foreground: colors.other,
+        foreground: palette.other,
       },
     },
     // Number
     {
       scope: ["constant.numeric", "constant.language"],
-      settings: { foreground: colors.digit },
+      settings: { foreground: palette.digit },
     },
     {
       scope: "keyword.other.unit.hexadecimal",
@@ -129,7 +113,7 @@ const theme = {
     {
       scope: "string.quoted",
       settings: {
-        foreground: colors.string,
+        foreground: palette.string,
       },
     },
     {
@@ -146,9 +130,11 @@ const theme = {
     {
       scope: "meta.enum.definition variable.other",
       settings: {
-        foreground: colors.foreground,
+        foreground: palette.foreground,
       },
     },
+    
+    ...go.tokenColors,
   ],
 };
 
