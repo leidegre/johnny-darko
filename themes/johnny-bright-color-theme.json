@@ -3,7 +3,9 @@
   "semanticHighlighting": true,
   "colors": {
     "editor.background": "#f9f4e7",
-    "editor.foreground": "#242829"
+    "editor.foreground": "#242829",
+    "editor.lineHighlightBackground": "#f3ecd8",
+    "editor.lineHighlightBorder": "#ffffff00"
   },
   "semanticTokenColors": {
     "macro": "#912e1d",
