@@ -11,6 +11,9 @@ const theme = {
   colors: {
     "editor.background": palette.background,
     "editor.foreground": palette.foreground,
+    
+    "editor.lineHighlightBackground": "#f3ecd8",
+    "editor.lineHighlightBorder": "#ffffff00",
   },
   semanticTokenColors: {
     macro: palette.constant,

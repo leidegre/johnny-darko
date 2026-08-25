@@ -14,6 +14,7 @@
         --keyword: #be9913;
         --builtin: #3c99c8;
         --string: #3c99c8;
+        --line: #fcabc3;
       }
       
       html, body {
@@ -22,8 +23,16 @@
       }
       
       #editor {
-        font-family: 'Pragmata Pro', monospace;
+        font-family: "Pragmata Pro", monospace;
         font-size: 10pt;
+      }
+      
+      .line {
+        display: block;
+      }
+      
+      .line[data-number="9"] {
+        background-color: var(--line);
       }
     </style>
     <script>
@@ -228,6 +237,10 @@
           
           palette.append(label)
           
+          if (style == "--line") {
+            continue
+          }
+          
           sheet.append(`.${style.slice(2)} { color: var(${style}) }\n`)
         }
         
@@ -245,11 +258,22 @@
         const keywords = new Set(["if", "else", "for", "static", "const", "void"])
         const builtins = new Set(["int_ptr·u", "int·u", "raw_ptr"])
         
+        let line = document.createElement("span")
+        line.className = "line"
+        line.dataset.number = 1
+        
+        let lineNumber = 1
+        
         while (scanner.tok != "eof") {
           if (scanner.tok == "space") {
-            editor.append(scanner.lit)
+            line.append(scanner.lit)
           } else if (scanner.tok == "eol") {
-            editor.append(scanner.lit)
+            line.append("\n")
+            editor.append(line)
+            lineNumber += 1
+            line = document.createElement("span")
+            line.className = "line"
+            line.dataset.number = lineNumber
           } else {
             const span = document.createElement("span")
             if (scanner.tok == "ident") {
@@ -267,9 +291,13 @@
               span.className = scanner.tok
             }
             span.textContent = scanner.lit
-            editor.append(span)
+            line.append(span)
           }
           scanner.scan()
+        }
+            
+        if (line.firstChild) {
+          editor.append(line)
         }
       });
     </script>
