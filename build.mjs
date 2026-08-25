@@ -3,6 +3,7 @@ import { writeFileSync } from "node:fs";
 import { palette } from "./palette.mjs";
 
 import * as go from "./lang/go.mjs";
+import * as js from "./lang/js.mjs";
 
 const theme = {
   name: "Johnny Bright",
@@ -135,6 +136,7 @@ const theme = {
     },
     
     ...go.tokenColors,
+    ...js.tokenColors,
   ],
 };
 

@@ -178,6 +178,16 @@
       "settings": {
         "foreground": "#912e1d"
       }
+    },
+    {
+      "scope": [
+        "storage.type.js",
+        "storage.type.function.js",
+        "storage.type.class.js"
+      ],
+      "settings": {
+        "foreground": "#a99f84"
+      }
     }
   ]
 }
